@@ -51,7 +51,12 @@ public class Main {
         }
     }
 
-    public static String[][] readSpreadsheetFromKeyboard() throws FileNotFoundException,IOException {
+    /**
+     * Method read spreadsheet from keyboard.
+     * @return spreadsheet like two-dimensional array
+     * @throws IOException - when i/o error occur.
+     */
+    public static String[][] readSpreadsheetFromKeyboard() throws IOException {
         BufferedReader br = new BufferedReader( new InputStreamReader(System.in));
         String dimension = br.readLine();
         String countColsRows[] = dimension.trim().split(" ");
@@ -67,6 +72,13 @@ public class Main {
         return sprSht;
     }
 
+    /**
+     * Method read spreadsheet from file.
+     * @param filename - path to file with spreadsheet.
+     * @return spreadsheet like two-dimensional array
+     * @throws FileNotFoundException - occur when file not found.
+     * @throws IOException - when i/o error occur.
+     */
     public static String[][] readSpreadsheetFromFile(String filename) throws FileNotFoundException,IOException {
         BufferedReader br = new BufferedReader(new FileReader(filename));
         String dimension = br.readLine();
@@ -84,6 +96,14 @@ public class Main {
         return sprSht;
     }
 
+    /**
+     * Method create thread for handlind cell and add his to array of tasks.
+     * @param sprShtTasks - two-dimensional array of task.
+     * @param sprSht - spreadsheet.
+     * @param i - row spreadsheet.
+     * @param j - column spreadsheet.
+     * @return thread for start.
+     */
     public static Thread createThread(FutureTask<String> sprShtTasks[][], String sprSht[][], int i, int j ) {
         CellHandler cellHandler = new CellHandler(sprSht, i, j);
         FutureTask<String> futureTask = new FutureTask(cellHandler);
@@ -92,6 +112,13 @@ public class Main {
         return thread;
     }
 
+    /**
+     * Method print spreadsheet.
+     * @param getter class which implements interface Getter.
+     * @param n - count rows.
+     * @param m - count columns.
+     * @param cellWidth - width of cell for printing.
+     */
     public static void printSpreadSheet(Getter<String> getter, int n, int m, int cellWidth) {
         for (int i = 0; i < n; i++ ) {
             for (int j = 0; j < m; j++ ) {
@@ -101,9 +128,17 @@ public class Main {
         }
     }
 
+    /**
+     * Interface for get element from two-dimensional array.
+     * @param <T>
+     */
     public interface Getter<T> {
         public T get(int i, int j);
     }
+
+    /**
+     * Class wrapper for two-dimensional array of task.
+     */
     public static class GetStringCellFromTask implements Getter<String> {
         private FutureTask<String> futureTask[][];
 
@@ -126,6 +161,9 @@ public class Main {
         }
     }
 
+    /**
+     * Class wrapper for two-dimensional spreadsheet.
+     */
     public static class GetStringCellFromString implements Getter<String> {
         private String array[][];
 
