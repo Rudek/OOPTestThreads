@@ -13,8 +13,8 @@ public class Main {
 
         try {
 
-            //String sprSht[][] = readSpreadsheetFromFile("src/main/resources/4x3.txt");
-            String sprSht[][] = readSpreadsheetFromKeyboard();
+            String sprSht[][] = readSpreadsheetFromFile("src/main/resources/4x3.txt");
+            //String sprSht[][] = readSpreadsheetFromKeyboard();
             int n = sprSht.length;
             int m = sprSht[0].length;
 
@@ -48,6 +48,8 @@ public class Main {
             out.println(ex.getMessage());
         } catch (IOException ex) {
             out.println(ex.getMessage());
+        } finally {
+
         }
     }
 
@@ -57,19 +59,25 @@ public class Main {
      * @throws IOException - when i/o error occur.
      */
     public static String[][] readSpreadsheetFromKeyboard() throws IOException {
-        BufferedReader br = new BufferedReader( new InputStreamReader(System.in));
-        String dimension = br.readLine();
-        String countColsRows[] = dimension.trim().split(" ");
-        int n = Integer.parseInt(countColsRows[0]);
-        int m = Integer.parseInt(countColsRows[1]);
-        String sprSht[][] = new String[n][m];
-        int row = 0;
-        String sprSheetRow;
-        while( row != n ) {
-            sprSht[row] = br.readLine().trim().split(" ");
-            row++;
+        BufferedReader br = null;
+        try {
+            new BufferedReader( new InputStreamReader(System.in));
+            String dimension = br.readLine();
+            String countColsRows[] = dimension.trim().split(" ");
+            int n = Integer.parseInt(countColsRows[0]);
+            int m = Integer.parseInt(countColsRows[1]);
+            String sprSht[][] = new String[n][m];
+            int row = 0;
+            String sprSheetRow;
+            while( row != n ) {
+                sprSht[row] = br.readLine().trim().split(" ");
+                row++;
+            }
+            return sprSht;
+        } finally {
+            if ( br != null )
+                br.close();
         }
-        return sprSht;
     }
 
     /**
@@ -80,24 +88,31 @@ public class Main {
      * @throws IOException - when i/o error occur.
      */
     public static String[][] readSpreadsheetFromFile(String filename) throws FileNotFoundException,IOException {
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        String dimension = br.readLine();
-        String countColsRows[] = dimension.trim().split(" ");
-        int n = Integer.parseInt(countColsRows[0]);
-        int m = Integer.parseInt(countColsRows[1]);
-        //out.println(n + " " + m);
-        String sprSht[][] = new String[n][m];
-        int row = 0;
-        String sprSheetRow;
-        while( (sprSheetRow = br.readLine()) != null ) {
-            sprSht[row] = sprSheetRow.trim().split(" ");
-            row++;
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(filename));
+
+            String dimension = br.readLine();
+            String countColsRows[] = dimension.trim().split(" ");
+            int n = Integer.parseInt(countColsRows[0]);
+            int m = Integer.parseInt(countColsRows[1]);
+            //out.println(n + " " + m);
+            String sprSht[][] = new String[n][m];
+            int row = 0;
+            String sprSheetRow;
+            while( (sprSheetRow = br.readLine()) != null ) {
+                sprSht[row] = sprSheetRow.trim().split(" ");
+                row++;
+            }
+            return sprSht;
+        } finally {
+            if ( br != null )
+                br.close();
         }
-        return sprSht;
     }
 
     /**
-     * Method create thread for handlind cell and add his to array of tasks.
+     * Method create thread for handling cell and add his to array of tasks.
      * @param sprShtTasks - two-dimensional array of task.
      * @param sprSht - spreadsheet.
      * @param i - row spreadsheet.
